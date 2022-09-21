@@ -1,6 +1,9 @@
 import 'package:bill_splitter/controller/checkbox_controller.dart';
 import 'package:flutter/material.dart';
 
+/* List of users in checkbox list tile format
+ Render a user list tile with checkbox
+*/
 class UsersCheckbox extends StatefulWidget {
   final String name;
   final CheckboxController checkboxController;
@@ -9,13 +12,10 @@ class UsersCheckbox extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<UsersCheckbox> createState() =>
-      _UsersCheckboxState(checkboxController: checkboxController);
+  State<UsersCheckbox> createState() => _UsersCheckboxState();
 }
 
 class _UsersCheckboxState extends State<UsersCheckbox> {
-  CheckboxController checkboxController;
-  _UsersCheckboxState({required this.checkboxController});
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
@@ -23,10 +23,10 @@ class _UsersCheckboxState extends State<UsersCheckbox> {
       title: Text(widget.name),
       checkColor: Colors.white,
       activeColor: Colors.blue,
-      value: checkboxController.getValue(),
+      value: widget.checkboxController.getValue(),
       onChanged: (bool? value) {
         setState(() {
-          checkboxController.switchCheck();
+          widget.checkboxController.switchCheck();
         });
       },
     );

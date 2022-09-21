@@ -2,19 +2,32 @@ import 'package:bill_splitter/controller/checkbox_controller.dart';
 import 'package:bill_splitter/model/bill/bill_model.dart';
 import 'package:bill_splitter/model/user/user_list_model.dart';
 import 'package:bill_splitter/model/user/user_model.dart';
+import 'package:bill_splitter/utils/formatter.dart';
 import 'package:flutter/material.dart';
 
 class FormItemController {
   final List<User> _users = UserListModel().getUsers();
   final Map<String, dynamic> _states = {};
   static bool tip = false;
+  final _formatter = Formatter();
 
-  String getTotalBill() {
+  String getTotalBillWithoutTip() {
     double totalValue = 0.0;
     for (var item in Bill().getBillList()) {
       totalValue += item.itemValue;
     }
-    return totalValue.toStringAsFixed(2);
+    return _formatter.formatCurrencyNumber(totalValue);
+  }
+
+  String getTotalBillWithTip() {
+    double totalValue = 0.0;
+    for (var item in Bill().getBillList()) {
+      totalValue += item.itemValue;
+    }
+    if (tip) {
+      totalValue = totalValue + (totalValue / 10);
+    }
+    return _formatter.formatCurrencyNumber(totalValue);
   }
 
   double getUserBillWithoutTip(String userName) {
@@ -46,13 +59,16 @@ class FormItemController {
     for (var item in Bill().getBillList()) {
       if (item.users.contains(_users[index])) {
         double userValue = item.itemValue / item.users.length;
-        bodyText += '${item.itemLabel}:${doubleToString(userValue)}\n';
+        bodyText +=
+            '${item.itemLabel}:${_formatter.formatCurrencyNumber(userValue)}\n';
       }
     }
     if (tip) {
-      bodyText += '10%: ${doubleToString(userBillValueWithoutTip / 10)}\n';
+      bodyText +=
+          '10%: ${_formatter.formatCurrencyNumber(userBillValueWithoutTip / 10)}\n';
     }
-    String totalText = 'Total: ${doubleToString(userBillValueWithTip)}';
+    String totalText =
+        'Total: ${_formatter.formatCurrencyNumber(userBillValueWithTip)}';
     return Text.rich(TextSpan(children: [
       TextSpan(
         text: bodyText,
@@ -86,10 +102,6 @@ class FormItemController {
       }
     }
     return selectedUsers;
-  }
-
-  String doubleToString(double value) {
-    return 'R\$ ${value.toStringAsFixed(2)}';
   }
 
   double? convertNumberStringToValue(String text) {

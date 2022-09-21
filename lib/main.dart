@@ -1,7 +1,6 @@
-import 'package:bill_splitter/controller/form_item_controller.dart';
 import 'package:bill_splitter/views/bill/bill_view.dart';
 import 'package:bill_splitter/views/items/list_item_view.dart';
-import 'package:bill_splitter/views/user/list_item_view.dart';
+import 'package:bill_splitter/views/user/list_user_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -29,9 +28,9 @@ class NavigationBar extends StatefulWidget {
 class _NavigationBarState extends State<NavigationBar> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
-    UserList(),
-    ItemList(),
-    BillScreen()
+    const UserList(),
+    const ItemList(),
+    const BillScreen()
   ];
   void _onItemTapped(int index) {
     setState(() {

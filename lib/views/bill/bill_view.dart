@@ -17,58 +17,57 @@ class _BillScreenState extends State<BillScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Total')),
       bottomNavigationBar: BottomAppBar(
-        child: Container(
+        shape: const CircularNotchedRectangle(),
+        child: SizedBox(
+          height: 60,
           child: ListTile(
-            leading: Icon(Icons.monetization_on),
-            title:
-                Text.rich(TextSpan(style: TextStyle(fontSize: 20), children: [
-              TextSpan(text: 'Total: '),
+            trailing: SizedBox(
+              width: 100,
+              child: Row(
+                children: [
+                  const Text(
+                    '10%',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  Switch(
+                      value: _formItemController.getTip(),
+                      onChanged: (bool value) {
+                        setState(() => _formItemController.changeTip());
+                      }),
+                ],
+              ),
+            ),
+            leading: const Icon(Icons.monetization_on),
+            title: Text.rich(
+                TextSpan(style: const TextStyle(fontSize: 20), children: [
+              const TextSpan(text: 'Total: '),
               TextSpan(
-                  text: 'R\$ ${_formItemController.getTotalBill()}',
-                  style: TextStyle(fontWeight: FontWeight.bold))
+                  text: _formItemController.getTotalBillWithTip(),
+                  style: const TextStyle(fontWeight: FontWeight.bold))
             ])),
           ),
-          height: 60,
         ),
-        shape: const CircularNotchedRectangle(),
       ),
-      body: Column(
-        children: [
-          Flexible(
-            child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: UserListModel().getUsers().length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      leading: const Center(
-                          widthFactor: 0.6,
-                          child:
-                              Icon(Icons.monetization_on_outlined, size: 60)),
-                      title: Padding(
-                        padding: const EdgeInsets.only(top: 6, bottom: 6.0),
-                        child: Text(
-                          UserListModel().getUsers()[index].name,
-                        ),
-                      ),
-                      subtitle:
-                          _formItemController.getValueFromUserIndex(index),
-                      isThreeLine: true,
-                    ),
-                  );
-                }),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 50, right: 50),
-            child: SwitchListTile(
-                title: Text('Adicionar 10 %'),
-                value: _formItemController.getTip(),
-                onChanged: (bool value) {
-                  setState(() => _formItemController.changeTip());
-                }),
-          )
-        ],
-      ),
+      body: ListView.builder(
+          shrinkWrap: true,
+          itemCount: UserListModel().getUsers().length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: ListTile(
+                leading: const Center(
+                    widthFactor: 0.6,
+                    child: Icon(Icons.monetization_on_outlined, size: 60)),
+                title: Padding(
+                  padding: const EdgeInsets.only(top: 6, bottom: 6.0),
+                  child: Text(
+                    UserListModel().getUsers()[index].name,
+                  ),
+                ),
+                subtitle: _formItemController.getValueFromUserIndex(index),
+                isThreeLine: true,
+              ),
+            );
+          }),
     );
   }
 }
