@@ -1,5 +1,6 @@
+import 'package:bill_splitter/components/bill_list_tile_component.dart';
+import 'package:bill_splitter/components/user_bill_tile_component.dart';
 import 'package:bill_splitter/controller/form_item_controller.dart';
-import 'package:bill_splitter/model/user/user_list_model.dart';
 import 'package:flutter/material.dart';
 
 class BillScreen extends StatefulWidget {
@@ -68,100 +69,31 @@ class _BillScreenState extends State<BillScreen> {
       ),
       bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),
-          child: SizedBox(
-              height: 60,
-              child: ListTile(
-                  title: Center(
-                child: SizedBox(
-                    width: 100,
-                    child: Row(children: [
-                      const Text(
-                        '10%',
-                        style: TextStyle(fontSize: 17),
-                      ),
-                      Switch(
-                          value: _formItemController.getTip(),
-                          onChanged: (bool value) {
-                            setState(() => _formItemController.changeTip());
-                          }),
-                    ])),
-              )))),
-      body: ListView.builder(
-          shrinkWrap: true,
-          itemCount: UserListModel().getUsers().length,
-          itemBuilder: (context, index) {
-            return Card(
-              child: ListTile(
-                leading: const Center(
-                    widthFactor: 0.6,
-                    child: Icon(Icons.monetization_on_outlined, size: 60)),
-                title: Padding(
-                  padding: const EdgeInsets.only(top: 6, bottom: 6.0),
-                  child: Text(
-                    UserListModel().getUsers()[index].name,
-                  ),
-                ),
-                subtitle: _formItemController.getValueFromUserIndex(index),
-                isThreeLine: true,
-              ),
-            );
-          }),
+          child: SizedBox(height: 45, child: tipButton())),
+      body: UserBillTile(formItemController: _formItemController),
     );
   }
-}
 
-class BillListTile extends StatefulWidget {
-  const BillListTile(
-      {super.key,
-      required double fontSize,
-      required String label,
-      required String value,
-      required IconData icon})
-      : _fontSize = fontSize,
-        _label = label,
-        _value = value,
-        _icon = icon;
-
-  final double _fontSize;
-  final String _label;
-  final String _value;
-  final IconData _icon;
-
-  @override
-  State<BillListTile> createState() => _BillListTileState();
-}
-
-class _BillListTileState extends State<BillListTile> {
-  @override
-  Widget build(BuildContext context) {
+  ListTile tipButton() {
     return ListTile(
-      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-      dense: true,
-      leading: Icon(
-        widget._icon,
-        color: Colors.white,
+        title: Center(
+      child: Transform.translate(
+        offset: const Offset(0, -4),
+        child: SizedBox.expand(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+              const Text(
+                'Taxa Serviço',
+                style: TextStyle(fontSize: 17),
+              ),
+              Switch(
+                  value: _formItemController.getTip(),
+                  onChanged: (bool value) {
+                    setState(() => _formItemController.changeTip());
+                  }),
+            ])),
       ),
-      title: Text.rich(TextSpan(
-          style: TextStyle(fontSize: widget._fontSize, color: Colors.white),
-          children: [TextSpan(text: widget._label)])),
-      trailing: SizedBox(
-        width: 100,
-        child: Row(
-          children: [
-            Transform.translate(
-              offset: const Offset(10, 0),
-              child: Text.rich(TextSpan(
-                  style: TextStyle(
-                      fontSize: widget._fontSize, color: Colors.white),
-                  children: [
-                    TextSpan(
-                        text: widget._value,
-                        style: const TextStyle(fontWeight: FontWeight.bold))
-                  ])),
-            )
-          ],
-        ),
-      ),
-    );
+    ));
   }
 }

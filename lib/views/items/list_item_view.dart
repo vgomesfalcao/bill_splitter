@@ -64,7 +64,7 @@ class ItemRow extends StatelessWidget {
         child: ListTile(
       leading: const Icon(Icons.monetization_on_outlined),
       title: Text(_item.itemLabel),
-      subtitle: Text(Formatter().formatCurrencyNumber(_item.itemValue)),
+      subtitle: Text(Formatter().formatCurrencyNumber(number: _item.itemValue)),
     ));
   }
 }

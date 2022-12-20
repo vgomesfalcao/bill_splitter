@@ -9,14 +9,15 @@ class FormItemController {
   final List<User> _users = UserListModel().getUsers();
   final Map<String, dynamic> _states = {};
   static bool tip = false;
-  final _formatter = Formatter();
+  final _formatterWithIcon = Formatter();
+  final _formatterWithoutIcon = Formatter();
 
   String getTotalBillWithoutTip() {
     double totalValue = 0.0;
     for (var item in Bill().getBillList()) {
       totalValue += item.itemValue;
     }
-    return _formatter.formatCurrencyNumber(totalValue);
+    return _formatterWithIcon.formatCurrencyNumber(number: totalValue);
   }
 
   String getTotalBillWithTip() {
@@ -24,7 +25,7 @@ class FormItemController {
     if (tip) {
       totalValue = totalValue + (totalValue / 10);
     }
-    return _formatter.formatCurrencyNumber(totalValue);
+    return _formatterWithIcon.formatCurrencyNumber(number: totalValue);
   }
 
   double getTotalValue() {
@@ -41,7 +42,7 @@ class FormItemController {
     if (tip) {
       tipValue = (totalValue / 10);
     }
-    return _formatter.formatCurrencyNumber(tipValue);
+    return _formatterWithIcon.formatCurrencyNumber(number: tipValue);
   }
 
   double getUserBillWithoutTip(String userName) {
@@ -65,36 +66,73 @@ class FormItemController {
     return totalValue;
   }
 
-  Text getValueFromUserIndex(int index) {
+  String getUserBillWithTipToString(int index) {
     final double userBillValueWithTip = getUserBillWithTip(_users[index].name);
+    String userBillWithTip =
+        _formatterWithIcon.formatCurrencyNumber(number: userBillValueWithTip);
+    return userBillWithTip;
+  }
+
+  Column getValueFromUserIndex(int index) {
+    MainAxisAlignment alignmentOfText = MainAxisAlignment.spaceBetween;
+    TextStyle textStyle = const TextStyle(fontSize: 14, color: Colors.black87);
     final double userBillValueWithoutTip =
         getUserBillWithoutTip(_users[index].name);
-    String bodyText = '';
+    List<Row> itemsText = [];
+    Row tipText;
     for (var item in Bill().getBillList()) {
       if (item.users.contains(_users[index])) {
         double userValue = item.itemValue / item.users.length;
-        bodyText +=
-            '${item.itemLabel}:${_formatter.formatCurrencyNumber(userValue)}\n';
+        itemsText.add(Row(mainAxisAlignment: alignmentOfText, children: [
+          Text(item.itemLabel, style: textStyle),
+          Text(
+            _formatterWithIcon.formatCurrencyNumber(number: userValue),
+            style: textStyle,
+          )
+        ]));
       }
     }
     if (tip) {
-      bodyText +=
-          '10%: ${_formatter.formatCurrencyNumber(userBillValueWithoutTip / 10)}\n';
+      tipText = Row(
+        mainAxisAlignment: alignmentOfText,
+        children: [
+          Text(
+            'Serviço',
+            style: textStyle,
+          ),
+          Text(
+              style: textStyle,
+              '${_formatterWithoutIcon.formatCurrencyNumber(
+                number: userBillValueWithoutTip,
+                currencyIcon: false,
+              )} x 10,0% = ${_formatterWithIcon.formatCurrencyNumber(number: userBillValueWithoutTip / 10)}')
+        ],
+      );
+    } else {
+      tipText = Row(
+        mainAxisAlignment: alignmentOfText,
+        children: [
+          Text(
+            'Serviço',
+            style: textStyle,
+          ),
+          Text(
+            'R\$ 0,00',
+            style: textStyle,
+          )
+        ],
+      );
     }
-    String totalText =
-        'Total: ${_formatter.formatCurrencyNumber(userBillValueWithTip)}';
-    return Text.rich(TextSpan(children: [
-      TextSpan(
-        text: bodyText,
-      ),
-      TextSpan(
-          text: totalText,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Colors.black,
-              height: 1.8)),
-    ]));
+
+    return Column(
+      children: [
+        ...itemsText,
+        const Divider(
+          color: Colors.black,
+        ),
+        tipText
+      ],
+    );
   }
 
   Map<String, dynamic> getStates() {
