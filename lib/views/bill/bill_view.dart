@@ -17,12 +17,15 @@ class _BillScreenState extends State<BillScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Conta'),
+        title: Transform.translate(
+            offset: const Offset(0, 8), child: const Text('Conta')),
         centerTitle: false,
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50))),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(60),
+                bottomRight: Radius.circular(60))),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(160),
+          preferredSize: const Size.fromHeight(150),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -132,7 +135,7 @@ class _BillListTileState extends State<BillListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      visualDensity: VisualDensity(horizontal: 0, vertical: -3),
+      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
       dense: true,
       leading: Icon(
         widget._icon,
