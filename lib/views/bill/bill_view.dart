@@ -64,37 +64,25 @@ class _BillScreenState extends State<BillScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        child: SizedBox(
-          height: 60,
-          child: ListTile(
-            trailing: SizedBox(
-              width: 100,
-              child: Row(
-                children: [
-                  const Text(
-                    '10%',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                  Switch(
-                      value: _formItemController.getTip(),
-                      onChanged: (bool value) {
-                        setState(() => _formItemController.changeTip());
-                      }),
-                ],
-              ),
-            ),
-            leading: const Icon(Icons.monetization_on),
-            title: Text.rich(
-                TextSpan(style: const TextStyle(fontSize: 20), children: [
-              const TextSpan(text: 'Total: '),
-              TextSpan(
-                  text: _formItemController.getTotalBillWithTip(),
-                  style: const TextStyle(fontWeight: FontWeight.bold))
-            ])),
-          ),
-        ),
-      ),
+          shape: const CircularNotchedRectangle(),
+          child: SizedBox(
+              height: 60,
+              child: ListTile(
+                  title: Center(
+                child: SizedBox(
+                    width: 100,
+                    child: Row(children: [
+                      const Text(
+                        '10%',
+                        style: TextStyle(fontSize: 17),
+                      ),
+                      Switch(
+                          value: _formItemController.getTip(),
+                          onChanged: (bool value) {
+                            setState(() => _formItemController.changeTip());
+                          }),
+                    ])),
+              )))),
       body: ListView.builder(
           shrinkWrap: true,
           itemCount: UserListModel().getUsers().length,
