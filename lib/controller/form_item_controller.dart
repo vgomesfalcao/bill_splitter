@@ -20,14 +20,28 @@ class FormItemController {
   }
 
   String getTotalBillWithTip() {
-    double totalValue = 0.0;
-    for (var item in Bill().getBillList()) {
-      totalValue += item.itemValue;
-    }
+    double totalValue = getTotalValue();
     if (tip) {
       totalValue = totalValue + (totalValue / 10);
     }
     return _formatter.formatCurrencyNumber(totalValue);
+  }
+
+  double getTotalValue() {
+    double totalValue = 0.0;
+    for (var item in Bill().getBillList()) {
+      totalValue += item.itemValue;
+    }
+    return totalValue;
+  }
+
+  String getTipValue() {
+    double totalValue = getTotalValue();
+    double tipValue = 0.0;
+    if (tip) {
+      tipValue = (totalValue / 10);
+    }
+    return _formatter.formatCurrencyNumber(tipValue);
   }
 
   double getUserBillWithoutTip(String userName) {
